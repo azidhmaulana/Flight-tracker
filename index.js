@@ -48,21 +48,19 @@ async function fetchAndSendFlights(client, topic, lat, lon, maxDistance) {
     let filteredFlights = await getFilteredFlights(lat, lon, maxDistance);
     messageCounter++;
     const timestamp = new Date().toISOString();
-    console.log(
-      `#${messageCounter} - ${timestamp} - Mengirim data penerbangan : Succes`
-    );
+    console.log(`#${messageCounter} - ${timestamp} - Send Flight : Succes`);
 
     const message = JSON.stringify(filteredFlights);
     client.publish(topic, message, { qos: 0 }, (error) => {
       if (error) {
         console.error(
-          `#${messageCounter} - ${timestamp} - Mengirim data penerbangan : Error - Message = ${error}`
+          `#${messageCounter} - ${timestamp} - Send Flight : Error - Message = ${error}`
         );
       }
     });
   } catch (error) {
     console.error(
-      `#${messageCounter} - ${timestamp} - Mengirim data penerbangan : Error in fetchAndSendFlights - Message = ${error}`
+      `#${messageCounter} - ${timestamp} - Sending Flight Data : Error in fetchAndSendFlights - Message = ${error}`
     );
   }
 }
@@ -82,8 +80,6 @@ const client = mqtt.connect(mqttBrokerUrl, {
 
 client.on("connect", () => {
   console.log("Connected to MQTT broker");
-
-  client.subscribe("gps/position");
 
   setInterval(() => {
     fetchAndSendFlights(client, topic, lat, lon, maxDistance);
